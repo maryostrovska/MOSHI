@@ -1,0 +1,24 @@
+23
+2
+5
+5
+Teacher 1: Math, English, Science, Informatic
+Teacher 2: Math, English, Science, Music
+Teacher 3: Math, English, Science, Informatic
+Teacher 4: Physical Education, Karate
+Room 1
+Room 2
+Room 3
+Physical Education Room
+Karate Room
+Music Room
+Class A
+Class B
+Class C
+Math, false, None
+English, false, None
+Science, false, None
+Informatic, false, None
+Physical Education, true, Physical Education Room
+Karate, true, Karate Room
+Music, true, Music Room

@@ -1,0 +1,97 @@
+# Імпортуємо необхідні бібліотеки
+import random
+import matplotlib.pyplot as plt
+import numpy as np
+import warnings
+from scipy.integrate import quad
+
+warnings.filterwarnings("ignore")
+
+# Функція для методу Монте-Карло інтегрування
+def monte_carlo_integration(f, a, b, n):
+    x = np.random.uniform(a, b, n)
+    y = np.random.uniform(0, f(b), n)
+    count = np.sum(y <= f(x))
+    integral = (b - a) * f(b) * count / n
+    x_in = x[y <= f(x)]
+    y_in = y[y <= f(x)]
+    x_out = x[y > f(x)]
+    y_out = y[y > f(x)]
+    return integral, x_in, y_in, x_out, y_out, a, b
+
+# Тестова функція
+def test_function(x):
+    return x ** 2
+
+# Головна функція
+def main_function(x):
+    return np.exp(x ** 2)
+
+# Функція для розрахунку похибок
+def errors(integral, a, b, main_function=None):
+    if main_function:
+        exact_value = (np.exp(b ** 2) - np.exp(a ** 2)) / 2
+    else:
+        exact_value = (b ** 3 - a ** 3) / 3
+    abs_error = abs(integral - exact_value)
+    rel_error = abs_error / exact_value
+    return exact_value, abs_error, rel_error
+
+
+# Задаємо початкові значення
+a = 1
+b = 2
+n = 3000
+
+# Виконуємо метод Монте-Карло для тестової функції
+integral_test, x_in_test, y_in_test, x_out_test, y_out_test, a, b = monte_carlo_integration(test_function, a, b, n)
+
+# Виконуємо метод Монте-Карло для головної функції
+integral_main, x_in_main, y_in_main, x_out_main, y_out_main, a, b = monte_carlo_integration(main_function, a, b, n)
+
+# Розраховуємо похибки для головної функції
+exact_value_main, abs_error_main, rel_error_main = errors(integral_main, a, b, main_function=True)
+
+# Виводимо результати для головної функції
+print(f"\033[1mГоловний інтеграл\033[0m")
+print(f"Головний інтеграл:{integral_main}")
+print(f"Точне значення: {exact_value_main}")
+print(f"Абсолютна похибка: {abs_error_main}")
+print(f"Відносна похибка: {rel_error_main*100}")
+
+
+# Розраховуємо похибки для тестової функції
+exact_value_test, abs_error_test, rel_error_test = errors(integral_test, a, b)
+
+# Виводимо результати для тестової функції
+print(f"\033[1m\nТестовий інтеграл\033[0m")
+print(f"Тестовий інтеграл:{integral_test}")
+print(f"Точне значення: {exact_value_test}")
+print(f"Абсолютна похибка: {abs_error_test}")
+print(f"Відносна похибка: {rel_error_test*100}")
+
+# Візуалізуємо головну функцію
+x = np.linspace(a, b, 100)
+y = main_function(x)
+plt.plot(x, y, color="black", linewidth=2)
+plt.scatter(x_in_main, y_in_main, color='grey', alpha=0.5)
+plt.scatter(x_out_main, y_out_main, color='pink', alpha=0.5)
+plt.title("Головна функція: exp(x ** 2)")
+plt.show()
+
+# Візуалізуємо тестову функцію
+x = np.linspace(a, b, 100)
+y = test_function(x)
+plt.plot(x, y, color="black", linewidth=2)
+plt.scatter(x_in_test, y_in_test, color='blue', alpha=0.5)
+plt.scatter(x_out_test, y_out_test, color='violet', alpha=0.5)
+plt.title("Тестова функція:  x ** 2")
+plt.show()
+
+
+
+
+
+
+
+#\033[1m   \033[0m
